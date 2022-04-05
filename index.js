@@ -29,7 +29,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true,
     cookie: {
-        maxAge: 60*1000
+        maxAge: 1000*60*10
     }
 }))
 app.use(passport.initialize())
@@ -57,17 +57,23 @@ const checkAuth = (req, res, next) => {
     next()
 }
 app.get('/', checkAuth, (req, res) => {
-    res.render('main.hbs', {username: req.user.username})
+    res.render('main.hbs', {username: req.user.email})
 })
 app.get('/login', (req, res) => {
     if(req.isAuthenticated()) {
-        return res.render('main.hbs', {username: req.user.username})
+        return res.render('main.hbs', {username: req.user.email})
     }
     res.render('login.hbs')
 })
+app.get('/register', (req, res) => {
+    if(req.isAuthenticated()) {
+        return res.render('main.hbs', {username: req.user.email})
+    }
+    res.render('register.hbs')
+})
 app.get('/logout', checkAuth, (req, res) => {
+    res.render('logout.hbs', {username: req.user.email})
     req.logout()
-    res.render('logout.hbs', {username: req.user.username})
 })
 
 app.use('/api', apiRoutes)

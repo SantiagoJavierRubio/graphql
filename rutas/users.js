@@ -26,7 +26,7 @@ passport.use('register', new LocalStrategy(
             }
             Usuario.create(newUser, (err, userWithId) => {
                 if(err) return done(err)
-                return done(null, newUser)
+                return done(null, userWithId)
             })
         })
     }
@@ -47,14 +47,14 @@ const postRegister = (req, res) => {
 
 const router = Router()
 
-router.post('/register', passport.authenticate('register', {failureRedirect: '/users/register-fail'}, postRegister))
-router.post('/login', passport.authenticate('login', {failureRedirect: '/users/login-fail'}, postLogin))
+router.post('/register', passport.authenticate('register', {failureRedirect: '/users/register-fail'}), postRegister)
+router.post('/login', passport.authenticate('login', {failureRedirect: '/users/login-fail'}), postLogin)
 
 router.get('/login-fail', (req, res) => {
-    res.send('login fallo')
+    res.render('user_error.hbs', {error: 'login'})
 })
 router.get('/register-fail', (req, res) => {
-    res.send('registro fallo')
+    res.render('user_error.hbs', {error: 'register'})
 })
 
 export default router
