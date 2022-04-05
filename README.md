@@ -1,11 +1,11 @@
-# Mocks y normalización
+# Inicio de sesión
 Desafío entregable para el curso de backend de Coderhouse
 
 ## Para probar el código:
 
 ```bash
 # Clonar el repositorio
-$ git clone https://github.com/cabrerarodrigo/log-in-formulario.git
+$ git clone https://github.com/cabrerarodrigo/inicio_de_sesion.git
 
 # Instalar dependencias
 $ npm install

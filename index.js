@@ -4,8 +4,11 @@ import { Server as HttpServer} from 'http'
 import { Server as IOServer } from 'socket.io'
 import { engine } from 'express-handlebars'
 import session from 'express-session'
+import passport from 'passport'
+import mongoose from 'mongoose'
 import MongoStore  from 'connect-mongo'
 import apiRoutes from './rutas/api.js'
+import userRoutes from './rutas/users.js'
 
 const app = express()
 const httpServer = new HttpServer(app)
@@ -29,6 +32,8 @@ app.use(session({
         maxAge: 60*1000
     }
 }))
+app.use(passport.initialize())
+app.use(passport.session())
 
 // Workaround porque no funcionaba __dirname al trabajar en módulos (creo)
 import { dirname } from 'path';
@@ -45,34 +50,28 @@ app.set('views', './views')
 app.set('view engine', 'hbs')
 
 // Request handlers
-const checkUsername = (req, res, next) => {
-    if(!req.session.username) {
+const checkAuth = (req, res, next) => {
+    if(!req.isAuthenticated()) {
         return res.redirect('/login')
     }
     next()
 }
-
-app.get('/', checkUsername, (req, res) => {
-    res.render('main.hbs', {username: req.session.username})
+app.get('/', checkAuth, (req, res) => {
+    res.render('main.hbs', {username: req.user.username})
 })
 app.get('/login', (req, res) => {
-    if(req.session.username) {
-        return res.render('main.hbs', {username: req.session.username})
+    if(req.isAuthenticated()) {
+        return res.render('main.hbs', {username: req.user.username})
     }
     res.render('login.hbs')
 })
-app.post('/login', (req, res) => {
-    if(req.body.nombre){
-        req.session.username = req.body.nombre
-        return res.render('main.hbs', {username: req.session.username})
-    }
-})
-app.get('/logout', checkUsername, (req, res) => {
-    res.render('logout.hbs', {username: req.session.username})
-    req.session.destroy()
+app.get('/logout', checkAuth, (req, res) => {
+    req.logout()
+    res.render('logout.hbs', {username: req.user.username})
 })
 
 app.use('/api', apiRoutes)
+app.use('/users', userRoutes)
 
 // DAOs import
 import { mensajes } from './daos/firebase.js'
@@ -93,6 +92,7 @@ io.on('connection', async socket => {
 
 const PORT = process.env.PORT || 5000
 
+mongoose.connect('mongodb://RodrigoCabrera:Hockeyrestapuma1@cluster0-shard-00-00.obp4y.mongodb.net:27017,cluster0-shard-00-01.obp4y.mongodb.net:27017,cluster0-shard-00-02.obp4y.mongodb.net:27017/coderhouse?ssl=true&replicaSet=atlas-9tzx2f-shard-0&authSource=admin&retryWrites=true&w=majority',)
 const server = httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`)
 })
