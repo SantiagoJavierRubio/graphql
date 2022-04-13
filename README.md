@@ -13,12 +13,13 @@ $ npm install
 
 
 ### Finalmente:
+Correr en programa
 ```bash
-# Correr el programa (utiliza el puerto 5000)
-$ npm run start
+# Usando el puerto por defecto (8080)
+$ node index.js
 ```
-o
+o eligiendo el puerto:
 ```bash
-# Alternativamente se puede correr con nodemon, para ello:
-$ npm run dev
+# Reemplazar /PUERTO/ por el valor deseado
+$ node index.js -p /PUERTO/
 ```
