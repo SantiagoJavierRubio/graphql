@@ -1,11 +1,11 @@
-# Inicio de sesión
+# Usando el objeto process
 Desafío entregable para el curso de backend de Coderhouse
 
 ## Para probar el código:
 
 ```bash
 # Clonar el repositorio
-$ git clone https://github.com/cabrerarodrigo/inicio_de_sesion.git
+$ git clone https://github.com/cabrerarodrigo/usando_process.git
 
 # Instalar dependencias
 $ npm install
