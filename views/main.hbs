@@ -21,7 +21,7 @@
         </table>
         <script>
             function populate() {
-                fetch('/api/productos-test')
+                fetch('/products_api/productos-test')
                     .then(res => res.json())
                     .then(data => {
                         let productList = ''
@@ -42,6 +42,13 @@
                     .catch(err => console.log(err))
             }
             populate()
+            function getRandomNumbers() {
+                fetch('/api/randoms?cant=500000000')
+                    .then(res => res.json())
+                    .then(data => console.log(data))
+                    .catch(err => console.log(err))
+            }
+            getRandomNumbers()
         </script>
     </div>
 </section>

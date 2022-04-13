@@ -1,0 +1,34 @@
+<section>
+    <div>
+        <h3>Argumentos de entrada</h3>
+        <ul>
+            {{#each args}}
+            <li>{{@key}}: {{this}}</li>
+            {{/each}}
+        </ul>
+    </div>
+    <div>
+        <h3>Sistema operativo (plataforma)</h3>
+        <p>{{platform}}</p>
+    </div>
+    <div>
+        <h3>Versión de node</h3>
+        {{version}}
+    </div>
+    <div>
+        <h3>Memoria total reservada</h3>
+        {{rss}}
+    </div>
+    <div>
+        <h3>Path de ejecución</h3>
+        {{path}}
+    </div>
+    <div>
+        <h3>Process id</h3>
+        {{pid}}
+    </div>
+    <div>
+        <h3>Carpeta del proyecto</h3>
+        {{directory}}
+    </div>
+</section>

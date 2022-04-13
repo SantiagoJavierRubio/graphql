@@ -7,8 +7,23 @@ import session from 'express-session'
 import passport from 'passport'
 import mongoose from 'mongoose'
 import MongoStore  from 'connect-mongo'
-import apiRoutes from './rutas/api.js'
+import apiRoutes from './rutas/products.js'
 import userRoutes from './rutas/users.js'
+import randomRoutes from './rutas/randoms.js'
+import 'dotenv/config'
+import _yargs from 'yargs'
+
+const yargs = _yargs(process.argv.slice(2))
+const args = yargs
+    .alias('p', 'puerto')
+    .default('puerto', 8080)
+    .coerce('puerto', function(arg) {
+        if(arg[1]){
+            return arg[0]
+        } else {
+            return arg
+        }
+    }).argv
 
 const app = express()
 const httpServer = new HttpServer(app)
@@ -19,13 +34,13 @@ app.use(express.static('./public'))
 
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: 'mongodb://RodrigoCabrera:Hockeyrestapuma1@cluster0-shard-00-00.obp4y.mongodb.net:27017,cluster0-shard-00-01.obp4y.mongodb.net:27017,cluster0-shard-00-02.obp4y.mongodb.net:27017/coderhouse?ssl=true&replicaSet=atlas-9tzx2f-shard-0&authSource=admin&retryWrites=true&w=majority',
+        mongoUrl: process.env.MONGO_URL,
         mongoOptions: {
             useNewUrlParser: true,
             useUnifiedTopology: true
         }
     }),
-    secret: 'eunsecreto',
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -75,9 +90,28 @@ app.get('/logout', checkAuth, (req, res) => {
     res.render('logout.hbs', {username: req.user.email})
     req.logout()
 })
+app.get('/info', (req, res) => {
+    const argList = {
+        ...args,
+        _: [...args._].toString()
+    }
+    if(!argList._) delete argList._
+    delete argList.$0
+    const info = {
+        args: argList,
+        platform: process.platform,
+        version: process.version,
+        rss: process.memoryUsage().rss,
+        path: process.execPath,
+        pid: process.pid,
+        directory: process.cwd()
+    }
+    res.render('info.hbs', info)
+})
 
-app.use('/api', apiRoutes)
+app.use('/products_api', apiRoutes)
 app.use('/users', userRoutes)
+app.use('/api', randomRoutes)
 
 // DAOs import
 import { mensajes } from './daos/firebase.js'
@@ -96,9 +130,9 @@ io.on('connection', async socket => {
     })
 })
 
-const PORT = process.env.PORT || 5000
+const PORT = args.puerto
 
-mongoose.connect('mongodb://RodrigoCabrera:Hockeyrestapuma1@cluster0-shard-00-00.obp4y.mongodb.net:27017,cluster0-shard-00-01.obp4y.mongodb.net:27017,cluster0-shard-00-02.obp4y.mongodb.net:27017/coderhouse?ssl=true&replicaSet=atlas-9tzx2f-shard-0&authSource=admin&retryWrites=true&w=majority',)
+mongoose.connect(process.env.MONGO_URL)
 const server = httpServer.listen(PORT, () => {
     console.log(`Servidor escuchando en el puerto ${PORT}`)
 })
