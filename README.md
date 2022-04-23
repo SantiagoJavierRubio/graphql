@@ -1,11 +1,11 @@
-# Usando el objeto process
+# Servidor con balance de carga
 Desafío entregable para el curso de backend de Coderhouse
 
 ## Para probar el código:
 
 ```bash
 # Clonar el repositorio
-$ git clone https://github.com/cabrerarodrigo/usando_process.git
+$ git clone https://github.com/cabrerarodrigo/servidor_con_balance_de_carga.git
 
 # Instalar dependencias
 $ npm install

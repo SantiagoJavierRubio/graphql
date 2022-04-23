@@ -1,5 +1,4 @@
 const numbers = {}
-
 process.on('message', msg => {
     for(let i=0; i<msg.cant; i++) {
         let num = Math.floor(Math.random()*1000)+1

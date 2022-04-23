@@ -1,5 +1,5 @@
 {
-  "name": "mocksynormalizacion",
+  "name": "servidorconbalance",
   "version": "1.0.0",
   "description": "Desafío entregable para el curso de backend de Coderhouse",
   "main": "index.js",
@@ -7,11 +7,12 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
+    "dev-cluster": "nodemon index.js --CLUSTER",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cabrerarodrigo/log-in-formulario.git"
+    "url": "https://github.com/cabrerarodrigo/servidor_con_balance_de_carga.git"
   },
   "keywords": [],
   "author": "cabrerarodrigo",

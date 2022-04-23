@@ -1,5 +1,6 @@
 // Server setup
 import express from 'express'
+import os from 'os'
 import { Server as HttpServer} from 'http'
 import { Server as IOServer } from 'socket.io'
 import { engine } from 'express-handlebars'
@@ -10,6 +11,7 @@ import MongoStore  from 'connect-mongo'
 import apiRoutes from './rutas/products.js'
 import userRoutes from './rutas/users.js'
 import randomRoutes from './rutas/randoms.js'
+import normalizar from './utils/normalizacion.js'
 import 'dotenv/config'
 import _yargs from 'yargs'
 
@@ -17,6 +19,10 @@ const yargs = _yargs(process.argv.slice(2))
 const args = yargs
     .alias('p', 'puerto')
     .default('puerto', 8080)
+    .boolean('CLUSTER')
+    .boolean('FORK')
+    .default('CLUSTER', false)
+    .default('FORK', true)
     .coerce('puerto', function(arg) {
         if(arg[1]){
             return arg[0]
@@ -24,10 +30,7 @@ const args = yargs
             return arg
         }
     }).argv
-
 const app = express()
-const httpServer = new HttpServer(app)
-const io = new IOServer(httpServer)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('./public'))
@@ -104,7 +107,8 @@ app.get('/info', (req, res) => {
         rss: process.memoryUsage().rss,
         path: process.execPath,
         pid: process.pid,
-        directory: process.cwd()
+        directory: process.cwd(),
+        procesadores: os.cpus().length
     }
     res.render('info.hbs', info)
 })
@@ -116,26 +120,45 @@ app.use('/api', randomRoutes)
 // DAOs import
 import { mensajes } from './daos/firebase.js'
 
-// Socket handlers
-import normalizar from './utils/normalizacion.js'
-
-io.on('connection', async socket => {
-    console.log(`User connected with socket id: ${socket.id}`)
-    const msjs = await mensajes.getAll()
-    socket.emit('messageBoard', normalizar(msjs))
-    socket.on('userMessage', async (msg) => {
+const PORT = args.puerto
+const startServer = () => {
+    const httpServer = new HttpServer(app)
+    const io = new IOServer(httpServer)
+ 
+    io.on('connection', async socket => {
+        console.log(`User connected with socket id: ${socket.id}`)
+        const msjs = await mensajes.getAll()
+        socket.emit('messageBoard', normalizar(msjs))
+        socket.on('userMessage', async (msg) => {
         await mensajes.save(msg)
         const msjs = await mensajes.getAll()
         socket.emit('messageBoard', normalizar(msjs))
+        })
     })
-})
+    mongoose.connect(process.env.MONGO_URL)
+    const server = httpServer.listen(PORT, () => {
+        console.log(`Servidor escuchando en el puerto ${PORT} - PID worker: ${process.pid}`)
+    })
+    server.on('error', (err) => {
+        console.error(`Server error: ${err}`)
+    })
+}
 
-const PORT = args.puerto
-
-mongoose.connect(process.env.MONGO_URL)
-const server = httpServer.listen(PORT, () => {
-    console.log(`Servidor escuchando en el puerto ${PORT}`)
-})
-server.on('error', (err) => {
-    console.error(`Server error: ${err}`)
-})
+if(args.CLUSTER) {
+    const { default: cluster } = await import('cluster')
+    if(cluster.isMaster) {
+        console.log(`Master ${process.pid} is running`)
+        const cpuCount = os.cpus().length
+        for(let i = 0; i < cpuCount; i++) {
+            cluster.fork()
+            procesadores++
+        }
+        cluster.on('exit', (worker, code, signal) => {
+            console.log(`worker ${worker.process.pid} died`)
+        })
+    } else {
+        startServer()
+    }
+} else {
+    startServer()
+}
