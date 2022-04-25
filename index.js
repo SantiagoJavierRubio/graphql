@@ -19,10 +19,7 @@ const yargs = _yargs(process.argv.slice(2))
 const args = yargs
     .alias('p', 'puerto')
     .default('puerto', 8080)
-    .boolean('CLUSTER')
-    .boolean('FORK')
-    .default('CLUSTER', false)
-    .default('FORK', true)
+    .default('modo', 'fork')
     .coerce('puerto', function(arg) {
         if(arg[1]){
             return arg[0]
@@ -144,7 +141,7 @@ const startServer = () => {
     })
 }
 
-if(args.CLUSTER) {
+if(args.modo === 'cluster' || args.modo === 'CLUSTER') {
     const { default: cluster } = await import('cluster')
     if(cluster.isMaster) {
         console.log(`Master ${process.pid} is running`)
