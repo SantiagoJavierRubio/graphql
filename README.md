@@ -60,8 +60,8 @@ $ sudo nginx -s stop # --> sólo en iOS
 ```
 
 #### Segunda parte de la consigna:
-- Descomentar la sección de nginx.conf señalada como 'Segunda parte de la consigna'
-- Comentar la anterior
+- Descomentar [la sección de nginx.conf](https://github.com/cabrerarodrigo/servidor_con_balance_de_carga/blob/main/nginx.conf#:~:text=%23server%20127.0.0.1%3A8082,server%20127.0.0.1%3A8085%3B) señalada como 'Segunda parte de la consigna'
+- Comentar [la anterior](https://github.com/cabrerarodrigo/servidor_con_balance_de_carga/blob/main/nginx.conf#:~:text=server%20127.0.0.1%3A8081%3B)
 
 ```bash
 # Ejecutar nginx (en SO Windows)
