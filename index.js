@@ -148,7 +148,6 @@ if(args.modo === 'cluster' || args.modo === 'CLUSTER') {
         const cpuCount = os.cpus().length
         for(let i = 0; i < cpuCount; i++) {
             cluster.fork()
-            procesadores++
         }
         cluster.on('exit', (worker, code, signal) => {
             console.log(`worker ${worker.process.pid} died`)
