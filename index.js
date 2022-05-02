@@ -4,22 +4,37 @@ import os from 'os'
 import { Server as HttpServer} from 'http'
 import { Server as IOServer } from 'socket.io'
 import { engine } from 'express-handlebars'
+import compression from 'compression'
 import session from 'express-session'
 import passport from 'passport'
 import mongoose from 'mongoose'
 import MongoStore  from 'connect-mongo'
 import apiRoutes from './rutas/products.js'
 import userRoutes from './rutas/users.js'
-import randomRoutes from './rutas/randoms.js'
+// import randomRoutes from './rutas/randoms.js'
 import normalizar from './utils/normalizacion.js'
 import 'dotenv/config'
 import _yargs from 'yargs'
+import log4js from 'log4js'
+log4js.configure({
+    appenders: {
+        consola: { type: 'console' },
+        warnings: { type: 'file', filename: 'warn.log' },
+        errores: { type: 'file', filename: 'error.log'}
+    },
+    categories: {
+        default: { appenders: ['consola'], level: 'all'},
+        warning: { appenders: ['warnings', 'consola'], level: 'warn'},
+        errores: { appenders: ['errores', 'consola'], level: 'error'}
+    }
+})
 
 const yargs = _yargs(process.argv.slice(2))
 const args = yargs
     .alias('p', 'puerto')
     .default('puerto', 8080)
     .default('modo', 'fork')
+    .default('gzip', false)
     .coerce('puerto', function(arg) {
         if(arg[1]){
             return arg[0]
@@ -31,6 +46,7 @@ const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('./public'))
+if(args.gzip) app.use(compression())
 
 app.use(session({
     store: MongoStore.create({
@@ -49,6 +65,12 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
+
+app.use((req, res, next) => {
+    let logger = log4js.getLogger()
+    logger.info(`RUTA: ${req.path} - METODO: ${req.method}`)
+    return next()
+})
 
 // Workaround porque no funcionaba __dirname al trabajar en módulos (creo)
 import { dirname } from 'path';
@@ -112,7 +134,13 @@ app.get('/info', (req, res) => {
 
 app.use('/products_api', apiRoutes)
 app.use('/users', userRoutes)
-app.use('/api', randomRoutes)
+// app.use('/api', randomRoutes)
+
+app.get('*', (req, res) => {
+    let logger = log4js.getLogger('warning')
+    logger.warn(`RUTA: ${req.path} - METODO: ${req.method}`)
+    res.send('Not found')
+})
 
 // DAOs import
 import { mensajes } from './daos/firebase.js'
@@ -123,14 +151,19 @@ const startServer = () => {
     const io = new IOServer(httpServer)
  
     io.on('connection', async socket => {
-        console.log(`User connected with socket id: ${socket.id}`)
-        const msjs = await mensajes.getAll()
-        socket.emit('messageBoard', normalizar(msjs))
-        socket.on('userMessage', async (msg) => {
-        await mensajes.save(msg)
-        const msjs = await mensajes.getAll()
-        socket.emit('messageBoard', normalizar(msjs))
-        })
+        try {
+            console.log(`User connected with socket id: ${socket.id}`)
+            const msjs = await mensajes.getAll()
+            socket.emit('messageBoard', normalizar(msjs))
+            socket.on('userMessage', async (msg) => {
+            await mensajes.save(msg)
+            const msjs = await mensajes.getAll()
+            socket.emit('messageBoard', normalizar(msjs))
+            })
+        } catch(err) {
+            let logger = log4js.getLogger('errores')
+            logger.error(err)
+        }
     })
     mongoose.connect(process.env.MONGO_URL)
     const server = httpServer.listen(PORT, () => {

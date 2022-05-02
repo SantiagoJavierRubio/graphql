@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { faker } from '@faker-js/faker'
+import log4js from 'log4js'
 
 const generateMockProducts = (cant) => {
     const fakeProducts = []
@@ -17,8 +18,13 @@ const generateMockProducts = (cant) => {
 const router = Router()
 
 router.get('/productos-test', async (req, res) => {
-    const prods = generateMockProducts(5)
-    res.json(prods)
+    try {
+        const prods = generateMockProducts(5)
+        res.json(prods)
+    } catch(err) {
+        let logger = log4js.getLogger('errores')
+        logger.error(err)
+    }
 })
 
 export default router
