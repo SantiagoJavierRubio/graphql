@@ -1,5 +1,5 @@
 {
-  "name": "servidorconbalance",
+  "name": "loggers",
   "version": "1.0.0",
   "description": "Desafío entregable para el curso de backend de Coderhouse",
   "main": "index.js",
@@ -8,7 +8,8 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "dev-cluster": "nodemon index.js --modo=cluster",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node ac_test.js",
+    "start0x": "0x -o index.js"
   },
   "repository": {
     "type": "git",
@@ -20,6 +21,7 @@
   "homepage": "",
   "dependencies": {
     "@faker-js/faker": "^6.0.0",
+    "autocannon": "^7.8.1",
     "bcrypt": "^5.0.1",
     "compression": "^1.7.4",
     "connect-mongo": "^4.6.0",

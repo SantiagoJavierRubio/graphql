@@ -35,6 +35,7 @@ const args = yargs
     .default('puerto', 8080)
     .default('modo', 'fork')
     .default('gzip', false)
+    .default('consola', false)
     .coerce('puerto', function(arg) {
         if(arg[1]){
             return arg[0]
@@ -129,6 +130,7 @@ app.get('/info', (req, res) => {
         directory: process.cwd(),
         procesadores: os.cpus().length
     }
+    if(args.consola) console.log(info)
     res.render('info.hbs', info)
 })
 
