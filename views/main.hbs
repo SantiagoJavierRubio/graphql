@@ -41,14 +41,7 @@
                     })
                     .catch(err => console.log(err))
             }
-            populate()
-            function getRandomNumbers() {
-                fetch('/api/randoms?cant=500000000')
-                    .then(res => res.json())
-                    .then(data => console.log(data))
-                    .catch(err => console.log(err))
-            }
-            getRandomNumbers()
+            populate()∂
         </script>
     </div>
 </section>
@@ -115,6 +108,7 @@
             const mensajesNormalizados = normalizr.denormalize(mensajes.result, postsSchema, mensajes.entities)
             if(mensajesNormalizados.mensajes.length < 1) return
             let board = ''
+            mensajesNormalizados.mensajes.sort((a, b) => a.id > b.id ? -1 : 1)
             mensajesNormalizados.mensajes.forEach(msg => {
                 board += `
                     <p class="msg">

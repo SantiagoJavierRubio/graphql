@@ -5,7 +5,18 @@ h1 {
 section {
     margin-top: 1.5rem;
     background-color: rgba(0,0,0,0.2);
-    padding: 1rem;
+    padding: 2rem;
+}
+#info :nth-child(odd) h3 {
+    color: goldenrod;
+}
+#info :nth-child(even) h3 {
+    color: blueviolet;
+}
+#info p, #info li {
+    padding: .2rem 1rem 0rem 1rem;
+    font-size: 1rem;
+    font-weight: 700;
 }
 #message-section label{
     color: red;
@@ -43,4 +54,18 @@ section {
     width: 50px;
     height: 50px;
     border-radius: 50%;
+}
+#login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+}
+#login-form div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    gap: 1rem;
 }

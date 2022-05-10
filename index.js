@@ -158,9 +158,9 @@ const startServer = () => {
             const msjs = await mensajes.getAll()
             socket.emit('messageBoard', normalizar(msjs))
             socket.on('userMessage', async (msg) => {
-            await mensajes.save(msg)
-            const msjs = await mensajes.getAll()
-            socket.emit('messageBoard', normalizar(msjs))
+                await mensajes.save(msg)
+                const msjs = await mensajes.getAll()
+                socket.emit('messageBoard', normalizar(msjs))
             })
         } catch(err) {
             let logger = log4js.getLogger('errores')
