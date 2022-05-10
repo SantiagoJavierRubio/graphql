@@ -10,6 +10,6 @@ $ git clone https://github.com/cabrerarodrigo/heroku-deploy.git
 # Instalar dependencias
 $ npm install
 
-# Instalar librerías para realizar las pruebas (en caso de no tenerlas)
+# Iniciar el servidor
 $ npm start
 ```
