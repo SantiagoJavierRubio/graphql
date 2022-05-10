@@ -147,7 +147,7 @@ app.get('*', (req, res) => {
 // DAOs import
 import { mensajes } from './daos/firebase.js'
 
-const PORT = args.puerto
+const PORT = process.env.PORT || args.puerto
 const startServer = () => {
     const httpServer = new HttpServer(app)
     const io = new IOServer(httpServer)
