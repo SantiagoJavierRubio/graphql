@@ -1,5 +1,5 @@
 import admin from 'firebase-admin'
-import { firebaseData } from '../config.js'
+import { firebaseData } from '../../config.js'
 import ContenedorFirebase from '../contenedores/firebase.js'
 
 class Mensajes extends ContenedorFirebase {

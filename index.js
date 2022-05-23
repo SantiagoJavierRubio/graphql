@@ -11,8 +11,10 @@ import mongoose from 'mongoose'
 import MongoStore  from 'connect-mongo'
 import apiRoutes from './rutas/products.js'
 import userRoutes from './rutas/users.js'
-// import randomRoutes from './rutas/randoms.js'
-import normalizar from './utils/normalizacion.js'
+import randomRoutes from './rutas/randoms.js'
+import authRoutes from './rutas/auth.js'
+import infoRoutes from './rutas/info.js'
+import ioConnection from './rutas/mensajes.js'
 import 'dotenv/config'
 import _yargs from 'yargs'
 import log4js from 'log4js'
@@ -30,7 +32,7 @@ log4js.configure({
 })
 
 const yargs = _yargs(process.argv.slice(2))
-const args = yargs
+export const args = yargs
     .alias('p', 'puerto')
     .default('puerto', 8080)
     .default('modo', 'fork')
@@ -43,6 +45,8 @@ const args = yargs
             return arg
         }
     }).argv
+
+
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
@@ -87,86 +91,23 @@ app.engine('hbs', engine({
 app.set('views', './views')
 app.set('view engine', 'hbs')
 
-// Request handlers
-const checkAuth = (req, res, next) => {
-    if(!req.isAuthenticated()) {
-        return res.redirect('/login')
-    }
-    next()
-}
-app.get('/', checkAuth, (req, res) => {
-    res.render('main.hbs', {username: req.user.email})
-})
-app.get('/login', (req, res) => {
-    if(req.isAuthenticated()) {
-        return res.render('main.hbs', {username: req.user.email})
-    }
-    res.render('login.hbs')
-})
-app.get('/register', (req, res) => {
-    if(req.isAuthenticated()) {
-        return res.render('main.hbs', {username: req.user.email})
-    }
-    res.render('register.hbs')
-})
-app.get('/logout', checkAuth, (req, res) => {
-    res.render('logout.hbs', {username: req.user.email})
-    req.logout()
-})
-app.get('/info', (req, res) => {
-    const argList = {
-        ...args,
-        _: [...args._].toString()
-    }
-    if(!argList._) delete argList._
-    delete argList.$0
-    const info = {
-        args: argList,
-        platform: process.platform,
-        version: process.version,
-        rss: process.memoryUsage().rss,
-        path: process.execPath,
-        pid: process.pid,
-        directory: process.cwd(),
-        procesadores: os.cpus().length
-    }
-    if(args.consola) console.log(info)
-    res.render('info.hbs', info)
-})
-
+app.use(authRoutes)
 app.use('/products_api', apiRoutes)
 app.use('/users', userRoutes)
-// app.use('/api', randomRoutes)
-
+app.use('/api', randomRoutes)
+app.use('/info', infoRoutes)
 app.get('*', (req, res) => {
     let logger = log4js.getLogger('warning')
     logger.warn(`RUTA: ${req.path} - METODO: ${req.method}`)
     res.send('Not found')
 })
 
-// DAOs import
-import { mensajes } from './daos/firebase.js'
 
 const PORT = process.env.PORT || args.puerto
 const startServer = () => {
     const httpServer = new HttpServer(app)
     const io = new IOServer(httpServer)
- 
-    io.on('connection', async socket => {
-        try {
-            console.log(`User connected with socket id: ${socket.id}`)
-            const msjs = await mensajes.getAll()
-            socket.emit('messageBoard', normalizar(msjs))
-            socket.on('userMessage', async (msg) => {
-                await mensajes.save(msg)
-                const msjs = await mensajes.getAll()
-                socket.emit('messageBoard', normalizar(msjs))
-            })
-        } catch(err) {
-            let logger = log4js.getLogger('errores')
-            logger.error(err)
-        }
-    })
+    ioConnection(io)
     mongoose.connect(process.env.MONGO_URL)
     const server = httpServer.listen(PORT, () => {
         console.log(`Servidor escuchando en el puerto ${PORT} - PID worker: ${process.pid}`)
