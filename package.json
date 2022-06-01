@@ -1,5 +1,5 @@
 {
-  "name": "heroku-deploy",
+  "name": "arquitectura_de_capas",
   "version": "1.0.0",
   "description": "Desafío entregable para el curso de backend de Coderhouse",
   "main": "index.js",
@@ -7,11 +7,13 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "dev-cluster": "nodemon index.js --modo=cluster"
+    "dev-cluster": "nodemon index.js --modo=cluster",
+    "dev:firebase": "PERSISTENCIA=firebase nodemon index.js",
+    "dev:memory": "PERSISTENCIA=memory nodemon index.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cabrerarodrigo/heroku-deploy.git"
+    "url": "https://github.com/cabrerarodrigo/arquitectura_de_capas.git"
   },
   "keywords": [],
   "author": "cabrerarodrigo",
