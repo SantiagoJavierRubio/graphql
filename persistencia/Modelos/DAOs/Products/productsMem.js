@@ -12,7 +12,7 @@ class ProductsMemDAO extends BaseMemoriaDAO {
     }
     async getById(id) {
         let index = this.getIndex(id, this.products)
-        if(!index) throw new Error(`No existe el producto con id ${id}`)
+        if(index === -1) throw new Error(`No existe el producto con id ${id}`)
         const result = this.products[index]
         return new ProductDTO(result._id, result)
     }
@@ -24,7 +24,7 @@ class ProductsMemDAO extends BaseMemoriaDAO {
     }
     async deleteById(id) {
         let index = this.getIndex(id, this.products)
-        if(!index) throw new Error(`No existe el producto con id ${id}`)
+        if(index === -1) throw new Error(`No existe el producto con id ${id}`)
         this.products.splice(index, 1)
         return true
     }
@@ -34,7 +34,7 @@ class ProductsMemDAO extends BaseMemoriaDAO {
     }
     async updateById(id, product) {
         let index = this.getIndex(id, this.products)
-        if(!index) throw new Error(`No existe el producto con id ${id}`)
+        if(index === -1) throw new Error(`No existe el producto con id ${id}`)
         this.products[index] = {...product}
         const result = this.products[index]
         return new ProductDTO(result._id, result)

@@ -17,8 +17,6 @@ switch(variables.TIPO_PERSISTENCIA) {
         productDAO = new ProductMemDAO()
 }
                 
-const getProductDAO = () => {
+export const getProductDAO = () => {
     return productDAO
 }
-
-export default getProductDAO

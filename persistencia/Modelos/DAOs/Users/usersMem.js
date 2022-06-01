@@ -9,8 +9,9 @@ class UserMemDAO extends BaseMemoriaDAO {
     }
     async getUser(id) {
         try {
-            const user = this.getIndex(id, this.users)
-            if(user.lenght === 0) return null
+            const userIndex = this.getIndex(id, this.users)
+            if(userIndex === -1) return null
+            const user = this.users[userIndex]
             return new UserDTO(user._id, user)
         }
         catch(err) {
