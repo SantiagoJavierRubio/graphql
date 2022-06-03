@@ -7,7 +7,7 @@ import { engine } from 'express-handlebars'
 import compression from 'compression'
 import session from 'express-session'
 import passport from 'passport'
-import mongoose from 'mongoose'
+//import mongoose from 'mongoose'
 import MongoStore  from 'connect-mongo'
 import apiRoutes from './rutas/products.js'
 import userRoutes from './rutas/users.js'
@@ -32,12 +32,13 @@ log4js.configure({
 })
 
 const yargs = _yargs(process.argv.slice(2))
-export const args = yargs
+export const args = await yargs
     .alias('p', 'puerto')
     .default('puerto', 8080)
     .default('modo', 'fork')
     .default('gzip', false)
     .default('consola', false)
+    .default('persistencia', 'mongo')
     .coerce('puerto', function(arg) {
         if(arg[1]){
             return arg[0]
@@ -45,7 +46,7 @@ export const args = yargs
             return arg
         }
     }).argv
-
+process.env.PERSISTENCIA = args.persistencia
 
 const app = express()
 app.use(express.json())
@@ -108,7 +109,7 @@ const startServer = () => {
     const httpServer = new HttpServer(app)
     const io = new IOServer(httpServer)
     ioConnection(io)
-    mongoose.connect(process.env.MONGO_URL)
+    //mongoose.connect(process.env.MONGO_URL)
     const server = httpServer.listen(PORT, () => {
         console.log(`Servidor escuchando en el puerto ${PORT} - PID worker: ${process.pid}`)
     })

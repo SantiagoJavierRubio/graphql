@@ -12,3 +12,7 @@ export const firebaseData =  {
     auth_provider_x509_cert_url: "https://www.googleapis.com/oauth2/v1/certs",
     client_x509_cert_url: "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-17cdn%40basedeprueba-8e5c0.iam.gserviceaccount.com"
 }
+
+export const variables = {
+    TIPO_PERSISTENCIA: process.env.PERSISTENCIA || "mongo",
+}
