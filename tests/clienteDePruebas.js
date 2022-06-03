@@ -8,7 +8,7 @@ export const testProductsGet = async () => {
         return response.data
     }
     catch(err) {
-        return { error: err }
+        return { failed: err.response.data || err }
     }
 }
 
@@ -22,7 +22,7 @@ export const testProductCreate = async () => {
         return response.data
     }
     catch(err) {
-        return { error: err }
+        return { failed: err.response.data || err }
     }
 }
 
@@ -36,7 +36,7 @@ export const testProductEdit = async (id) => {
         return response.data
     }
     catch(err) {
-        return { error: err }
+        return { failed: err.response.data || err }
     }
 }
 
@@ -46,11 +46,6 @@ export const testProductDelete = async (id) => {
         return response.data
     }
     catch(err) {
-        return { error: err }
+        return { failed: err.response.data || err }
     }
 }
-
-// console.log(await testProductsGet())
-// console.log(await testProductCreate())
-console.log(await testProductEdit('629a5195cc52f892ed201376'))
-// console.log(await testProductDelete('629a5195cc52f892ed201376'))
