@@ -1,11 +1,11 @@
-# Arquitectura en capas - Segunda entrega
+# Probando la API Rest
 Desafío entregable para el curso de backend de Coderhouse
 
 ## Para probar el código:
 
 ```bash
 # Clonar el repositorio
-$ git clone https://github.com/cabrerarodrigo/arquitectura_de_capas.git
+$ git clone https://github.com/cabrerarodrigo/probando-api-rest.git
 
 # Instalar dependencias
 $ npm install
@@ -22,6 +22,13 @@ $ npm run dev:firebase # --> firebase
 $ npm run dev:memory # --> memoria
 ```
 
-## TO DO:
-- Implementación del patrón Repository sobre los DAOs de Mensaje y Productos
-- Reimplementación de las rutas de productos para pruebas
+## Para realizar las pruebas implementadas: 
+
+- Prueba cliente:
+    - Visitar http://localhost:8080/pruebas
+    - Las pruebas se imprimiran por la consola de ejecución del servidor
+
+- Pruebas con mocha/chia/supertest
+```bash
+$ npm run test
+```

@@ -48,7 +48,7 @@ export const args = await yargs
     }).argv
 process.env.PERSISTENCIA = args.persistencia
 
-const app = express()
+export const app = express()
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('./public'))

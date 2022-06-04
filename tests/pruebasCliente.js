@@ -95,6 +95,7 @@ const realizarPruebas = async () => {
     //
     const id = await pruebaPost()
     console.log(' \n---- Prueba de POST finalizada ---- \n')
+    //
     if(!id) return console.log('---> Suspendiendo pruebas por falta de ID <---')
     //
     await pruebaPut(id)
