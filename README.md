@@ -33,3 +33,5 @@ $ npm run dev:memory # --> memoria
 # Con el servidor iniciado en el modo que se quiera probar:
 $ npm run test
 ```
+
+#### Los reportes para cada uno de los métodos de persistencia se encuentran en el directorio tests/reports

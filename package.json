@@ -10,7 +10,8 @@
     "dev-cluster": "nodemon index.js --modo=cluster",
     "dev:firebase": "PERSISTENCIA=firebase nodemon index.js",
     "dev:memory": "PERSISTENCIA=memory nodemon index.js",
-    "test": "mocha tests/index.test.js --timeout=5000"
+    "test": "mocha tests/index.test.js --timeout=5000",
+    "test:report": "mocha -R spec tests/index.test.js --timeout=5000 | tee test_reports"
   },
   "repository": {
     "type": "git",
