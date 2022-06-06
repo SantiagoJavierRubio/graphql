@@ -30,5 +30,6 @@ $ npm run dev:memory # --> memoria
 
 - Pruebas con mocha/chia/supertest
 ```bash
+# Con el servidor iniciado en el modo que se quiera probar:
 $ npm run test
 ```
