@@ -22,27 +22,22 @@ export const fetchProducts = async (id) => {
         return await products.getAll()
     }
 }
-export const addProduct = async (productData) => {
+export const getAllProducts = async () => {
+    return await products.getAll()
+}
+export const addProduct = async ({productData}) => {
     const addedProduct = await products.add(productData)
-    const allProducts = await products.getAll()
-    return {
-        created: addedProduct,
-        products: allProducts
-    }
+    return addedProduct
 }
-export const updateProduct = async (id, productData) => {
+export const updateProduct = async ({id, productData}) => {
     if(id === null || id === undefined) throw new Error('Id is required to edit')
-    const editedProduct = await products.updateById(id, productData)
-    const allProducts = await products.getAll()
-    return {
-        edited: editedProduct,
-        products: allProducts
-    }
+    await products.updateById(id, productData)
+    const editedProduct = await products.getById(id)
+    return editedProduct
 }
-export const removeProduct = async (id) => {
+export const removeProduct = async ({id}) => {
     if(id === null || id === undefined) throw new Error('Id is required to delete')
     await products.deleteById(id)
-    return {
-        message: `Deleted product with id: ${id}`
-    }
+    const allProducts = await products.getAll()
+    return allProducts
 }

@@ -25,7 +25,8 @@ export const returnProducts = async (req, res) => {
 }
 export const createProduct = async (req, res) => {
     try {
-        const payload = await addProduct(req.body)
+        const productData = req.body
+        const payload = await addProduct({productData})
         res.send(payload)
     }
     catch(err) {
@@ -36,7 +37,8 @@ export const createProduct = async (req, res) => {
 }
 export const editProduct = async (req, res) => {
     try {
-        const payload = await updateProduct(req.params.id, req.body)
+        const productData = req.body
+        const payload = await updateProduct({id: req.params.id, productData})
         res.send(payload)
     }
     catch(err) {
@@ -47,7 +49,7 @@ export const editProduct = async (req, res) => {
 }
 export const deleteProduct = async (req, res) => {
     try {
-        const payload = await removeProduct(req.params.id)
+        const payload = await removeProduct({id: req.params.id})
         res.send(payload)
     }
     catch(err) {

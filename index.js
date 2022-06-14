@@ -15,6 +15,7 @@ import randomRoutes from './rutas/randoms.js'
 import authRoutes from './rutas/auth.js'
 import infoRoutes from './rutas/info.js'
 import ioConnection from './rutas/mensajes.js'
+import ControladorGrapQl from './controladores/graphql.js'
 import 'dotenv/config'
 import _yargs from 'yargs'
 import log4js from 'log4js'
@@ -92,6 +93,7 @@ app.engine('hbs', engine({
 app.set('views', './views')
 app.set('view engine', 'hbs')
 
+// RUTAS
 import realizarPruebas from './tests/pruebasCliente.js' 
 app.get('/pruebas', async (req, res) => {
     await realizarPruebas()
@@ -102,6 +104,7 @@ app.use('/products_api', apiRoutes)
 app.use('/users', userRoutes)
 app.use('/api', randomRoutes)
 app.use('/info', infoRoutes)
+app.use('/graphql', new ControladorGrapQl())
 app.get('*', (req, res) => {
     let logger = log4js.getLogger('warning')
     logger.warn(`RUTA: ${req.path} - METODO: ${req.method}`)

@@ -34,7 +34,7 @@ const pruebaPost = async () => {
         console.log('\n Crear producto (POST): \n')
         const clientResponse = await testProductCreate()
         if(clientResponse.failed) return console.log('Error al crear producto: ', clientResponse.failed)
-        const checkWithDB = await products.getById(clientResponse.created.id)
+        const checkWithDB = await products.getById(clientResponse.id)
         if(checkWithDB) {
             console.log(' ----> PRUEBA OK <----')
             return checkWithDB.id
@@ -52,7 +52,7 @@ const pruebaPut = async (id) => {
         console.log('\n Editar producto (PUT): \n')
         const clientResponse = await testProductEdit(id)
         if(clientResponse.failed) return console.log('Error al editar producto: ', clientResponse.failed)
-        const checkWithDB = await products.getById(clientResponse.edited.id)
+        const checkWithDB = await products.getById(clientResponse.id)
         console.log('CLIENT RESPONSE: \n', clientResponse)
         console.log('SERVER RESPONSE: \n', checkWithDB)
     }
