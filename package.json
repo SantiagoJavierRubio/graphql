@@ -1,5 +1,5 @@
 {
-  "name": "probando-api-rest",
+  "name": "graphql",
   "version": "1.0.0",
   "description": "Desafío entregable para el curso de backend de Coderhouse",
   "main": "index.js",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/cabrerarodrigo/arquitectura_de_capas.git"
+    "url": "https://github.com/cabrerarodrigo/graphql.git"
   },
   "keywords": [],
   "author": "cabrerarodrigo",

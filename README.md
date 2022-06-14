@@ -1,11 +1,11 @@
-# Probando la API Rest
+# GraphQl
 Desafío entregable para el curso de backend de Coderhouse
 
 ## Para probar el código:
 
 ```bash
 # Clonar el repositorio
-$ git clone https://github.com/cabrerarodrigo/probando-api-rest.git
+$ git clone https://github.com/cabrerarodrigo/graphql.git
 
 # Instalar dependencias
 $ npm install
@@ -24,11 +24,6 @@ $ npm run dev:memory # --> memoria
 
 ## Para realizar las pruebas implementadas: 
 
-- Prueba cliente:
-    - Visitar http://localhost:8080/pruebas
-    - Las pruebas se imprimiran por la consola de ejecución del servidor
-
-- Pruebas con mocha/chia/supertest
 ```bash
 # Con el servidor iniciado en el modo que se quiera probar:
 $ npm run test
